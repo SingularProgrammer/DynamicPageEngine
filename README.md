@@ -2,6 +2,8 @@
 
 A simple and easy solution for creating server-side rendered pages.
 
+You can add it to your project with `npm install dynamic-page-engine`.
+
 ## How It Works
 
 It detects keys you add to your static HTML pages and replaces them with the corresponding data. The generated HTML code can be served via a Node.js server. To add a key, you write the name of the desired data inside "{}" brackets; if a matching key is found, the brackets and the key are replaced with that data. Instead of plain text, HTML, CSS, and JavaScript code can also be added, but you must ensure the syntax is correct, otherwise your page may not function properly due to syntax errors.
@@ -66,4 +68,5 @@ Rendered index.html:
     <p>Your Name: Foo</p>
     <p>{the mismatched part appears unformatted.}</p>
 </body>
+
 ```
