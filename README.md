@@ -1,6 +1,6 @@
 # Dynamic Page Engine
 
-A lightweight, fast, and flexible server-side HTML templating engine for Node.js. Dynamic Page Engine lets you define placeholders in your static HTML files and replace them with real data at render time — with built-in caching, multi-language support, and layout composition.
+A lightweight, fast, and flexible server-side HTML templating engine for Node.js. Dynamic Page Engine lets you define placeholders in your static HTML files and replace them with real data at render time with built-in caching, multi-language support, and layout composition.
 
 ---
 
@@ -37,9 +37,9 @@ Dynamic Page Engine scans your HTML template files for `{key}` placeholders and 
 **Key features:**
 - Simple `{key}` placeholder syntax in HTML templates
 - Template-level and page-level caching for performance
-- File system watching — cached templates auto-update when files change
+- File system watching cached templates auto-update when files change
 - Multi-language template support via directory structure
-- Layout composition — merge a base layout with a page-specific template
+- Layout composition merge a base layout with a page-specific template
 - Expose render data directly to client-side JavaScript
 
 ---
@@ -166,7 +166,7 @@ const html = await engine.Render(
 | `content` | `object` | `{}` | Key-value pairs used to replace `{key}` placeholders in the template. |
 | `contentAccessableInScript` | `boolean` | `false` | If `true`, injects the `content` object as a JSON string in place of the `{DynamicPageEngine_ContentScript}` placeholder. |
 
-**Returns:** `Promise<string>` — The fully rendered HTML page.
+**Returns:** `Promise<string>` The fully rendered HTML page.
 
 ---
 
@@ -191,11 +191,11 @@ const html = await engine.RenderWithLayout(
 | `data` | `object` | Key-value pairs used to replace `{key}` placeholders in the final merged HTML. |
 
 **How merging works:**
-1. Both templates' `<head>` sections are extracted and concatenated — the base layout's `<head>` comes first, followed by the page's `<head>`.
+1. Both templates' `<head>` sections are extracted and concatenated the base layout's `<head>` comes first, followed by the page's `<head>`.
 2. The page's `<body>` content is injected into the layout's `<body>` where `{DynamicPageEngine_SiteContent}` appears.
 3. The merged HTML is cached (keyed by file paths and file modification timestamps) so repeated calls with unchanged files are fast.
 
-**Returns:** `Promise<string>` — The fully merged and rendered HTML page.
+**Returns:** `Promise<string>` The fully merged and rendered HTML page.
 
 ---
 
@@ -216,7 +216,7 @@ Wrap any key name in curly braces. It will be replaced with the matching value f
 
 ### Unmatched Keys
 
-If a placeholder has no matching key in the data object, it is left in the output **exactly as written** — no errors are thrown.
+If a placeholder has no matching key in the data object, it is left in the output **exactly as written** no errors are thrown.
 
 ```html
 <p>{this_key_doesnt_exist}</p>
@@ -227,7 +227,7 @@ If a placeholder has no matching key in the data object, it is left in the outpu
 
 ### Client-Side Data Access
 
-Place the special `{DynamicPageEngine_ContentScript}` token anywhere in your template (typically inside a `<script>` tag). When `contentAccessableInScript` is `true`, it is replaced with a JSON string of your entire data object — making the server-side data available to client-side JavaScript without an additional API call.
+Place the special `{DynamicPageEngine_ContentScript}` token anywhere in your template (typically inside a `<script>` tag). When `contentAccessableInScript` is `true`, it is replaced with a JSON string of your entire data object making the server-side data available to client-side JavaScript without an additional API call.
 
 ```html
 <script>
@@ -259,13 +259,13 @@ Dynamic Page Engine has two independent caching layers:
 
 ### 1. Template Cache (`cacheTemplates: true`)
 
-After a template file is read from disk for the first time, its raw content is stored in memory. Subsequent renders skip the file I/O entirely. A `fs.watch` listener is registered on the file — if the file is modified on disk, the in-memory cache is automatically invalidated and the file is re-read on the next request.
+After a template file is read from disk for the first time, its raw content is stored in memory. Subsequent renders skip the file I/O entirely. A `fs.watch` listener is registered on the file if the file is modified on disk, the in-memory cache is automatically invalidated and the file is re-read on the next request.
 
 ### 2. Render Cache (`rendercacheLimit: N`)
 
 After a given page URL (`specialURL`) has been visited **N or more times** with the same content, the fully rendered HTML output is stored in memory. Future requests for that exact combination return the cached HTML instantly, bypassing both file I/O and template processing.
 
-Set `rendercacheLimit` to `0` (the default) to disable render caching entirely — useful during development.
+Set `rendercacheLimit` to `0` (the default) to disable render caching entirely useful during development.
 
 ---
 
@@ -303,7 +303,7 @@ The engine constructs the full file path as:
 
 ## Layout System
 
-The layout system allows you to define a single **base layout** (with shared navigation, headers, footers, etc.) and inject page-specific content into it — keeping your templates DRY.
+The layout system allows you to define a single **base layout** (with shared navigation, headers, footers, etc.) and inject page-specific content into it keeping your templates DRY.
 
 ### Base Layout (`layout.html`)
 
@@ -411,4 +411,4 @@ app.listen(3000, () => console.log("Server running at http://localhost:3000"));
 - **Avoid spaces inside placeholders.** `{my key}` will not be matched and will appear as-is in the output.
 - **Use `specialURL` carefully** with render caching. If the same template is rendered with different `content` objects but the same `specialURL`, the cache may serve stale content. Use a URL that uniquely identifies the page *and* its data (e.g., `/product/42`).
 - **During development**, set `rendercacheLimit: 0` to always get fresh renders and `cacheTemplates: false` to always read files from disk.
-- **`RenderWithLayout`** uses synchronous file reads (`readFileSync`) internally for the initial load — avoid calling it in hot paths with very high concurrency without warming the cache first.
+- **`RenderWithLayout`** uses synchronous file reads (`readFileSync`) internally for the initial load avoid calling it in hot paths with very high concurrency without warming the cache first.
